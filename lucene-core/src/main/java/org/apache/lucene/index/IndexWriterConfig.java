@@ -35,6 +35,8 @@ import org.apache.lucene.util.SetOnce.AlreadySetException;
  * object will not affect the {@link IndexWriter} instance. For that, use
  * {@link LiveIndexWriterConfig} that is returned from {@link IndexWriter#getConfig()}.
  * 
+ * 持有用作创建一个IndexWriter所有的配置,一旦IndexWriter已经创建了实例。
+ * 修改它将不会影响已经创建的IndexWriter实例。可以使用{@link IndexWriter#getConfig()}返回一个LiveIndexWriterConfig对象
  * <p>
  * All setter methods return {@link IndexWriterConfig} to allow chaining
  * settings conveniently, for example:
@@ -56,17 +58,20 @@ public final class IndexWriterConfig extends LiveIndexWriterConfig {
   public static enum OpenMode {
     /** 
      * Creates a new index or overwrites an existing one. 
+     * 创建一个新的index或者复写一个存在的index
      */
     CREATE,
     
     /** 
      * Opens an existing index. 
+     * 打开一个存在的index
      */
     APPEND,
     
     /** 
      * Creates a new index if one does not exist,
      * otherwise it opens the index and documents will be appended. 
+     * 打开一个新的index如果不存在，否则打开index并且文档将被添加。
      */
     CREATE_OR_APPEND 
   }
