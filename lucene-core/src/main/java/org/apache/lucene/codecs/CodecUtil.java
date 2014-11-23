@@ -37,8 +37,9 @@ import org.apache.lucene.util.StringHelper;
 
 /**
  * Utility class for reading and writing versioned headers.
+ * 读和写版本头信息的工具类。写编码头对确定一个文件是你认为的很有用。
  * <p>
- * Writing codec headers is useful to ensure that a file is in 
+// * Writing codec headers is useful to ensure that a file is in 
  * the format you think it is.
  * 
  * @lucene.experimental
@@ -49,10 +50,12 @@ public final class CodecUtil {
 
   /**
    * Constant to identify the start of a codec header.
+   * 常数确定编码头开始。
    */
   public final static int CODEC_MAGIC = 0x3fd76c17;
   /**
    * Constant to identify the start of a codec footer.
+   * 常数确定编码头结束
    */
   public final static int FOOTER_MAGIC = ~CODEC_MAGIC;
 

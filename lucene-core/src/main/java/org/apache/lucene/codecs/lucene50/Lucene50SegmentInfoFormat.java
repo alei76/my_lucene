@@ -38,6 +38,7 @@ import org.apache.lucene.util.Version;
 
 /**
  * Lucene 5.0 Segment info format.
+ * Lucene 5.0 段信息格式
  * <p>
  * Files:
  * <ul>
@@ -68,6 +69,9 @@ import org.apache.lucene.util.Version;
  *       for each segment it creates. It includes metadata like the current Lucene
  *       version, OS, Java version, why the segment was created (merge, flush,
  *       addIndexes), etc.</li>
+ *   <li>Diagnostics Map 是{@link IndexWriter} 创建私有的，作为debug的辅助。对于每个创建的段，它包含一些元数据，比如:Lucene版本
+ *   	 操作系统，Java的版本。segment创建的原因(merge, flush,addIndexes)
+ *   </li>
  *   <li>Files is a list of files referred to by this segment.</li>
  * </ul>
  * </p>

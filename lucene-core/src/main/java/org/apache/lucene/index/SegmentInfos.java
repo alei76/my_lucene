@@ -47,8 +47,10 @@ import org.apache.lucene.util.StringHelper;
 /**
  * A collection of segmentInfo objects with methods for operating on those
  * segments in relation to the file system.
+ * 一个关于segmentInfo的集合,方法操作这些segments和文件系统的关系。
  * <p>
  * The active segments in the index are stored in the segment info file,
+ * 这些在索引中保存的活的segments,segments_N可能不止一个。
  * <tt>segments_N</tt>. There may be one or more <tt>segments_N</tt> files in
  * the index; however, the one with the largest generation is the active one
  * (when older segments_N files are present it's because they temporarily cannot
