@@ -28,15 +28,27 @@ import org.apache.lucene.util.packed.PackedInts;
 
 /**
  * Lucene 5.0 stored fields format.
+ * 
+ * <p><b>原理</b></p>
+ * <p>这个 {@link StoredFieldsFormat}16KB的文档为压缩块相对于文档水平的压缩为了提高压缩率。
+ * 它使用<a href="http://code.google.com/p/lz4/">LZ4</a> 。 虽然压缩方法用来focuses更多的
+ * 是压缩速度超过压缩率。它应该关注大文件(比如日志文件，HTML，纯文本)的压缩率上面。
+ * </p>
  *
- * <p><b>Principle</b></p>
+ *<p><b>文件格式</b></p>
+ *<p>存储域是由两个文件表示:</p>
+ *<ol>
+ *<li></li>
+ *
+ *</ol>
  * <p>This {@link StoredFieldsFormat} compresses blocks of 16KB of documents in
  * order to improve the compression ratio compared to document-level
- * compression. It uses the <a href="http://code.google.com/p/lz4/">LZ4</a>
+ * compression. It uses the <a href="http://code.google.com/pp/lz4/">LZ4</a>
  * compression algorithm, which is fast to compress and very fast to decompress
  * data. Although the compression method that is used focuses more on speed
  * than on compression ratio, it should provide interesting compression ratios
  * for redundant inputs (such as log files, HTML or plain text).</p>
+ * 
  * <p><b>File formats</b></p>
  * <p>Stored fields are represented by two files:</p>
  * <ol>
@@ -49,13 +61,20 @@ import org.apache.lucene.util.packed.PackedInts;
  * the buffer using the
  * <a href="http://code.google.com/p/lz4/">LZ4</a>
  * <a href="http://fastcompression.blogspot.fr/2011/05/lz4-explained.html">compression format</a>.</p>
+ * <p>一个域文件扩展名为(.fdt) 这个文件保存了一个紧凑的表示16KB或者更多的文档压缩块。当写一个segment段时。document会被加到内存的byte[]
+ *  buffer数组里。当它的大小达到16KB或者更多，一些关于文档的元数据就会被刷新到硬盘，紧随其后的压缩表示的缓冲区使用的是LZ4
+ * </p>
  * <p>Here is a more detailed description of the field data file format:</p>
  * <ul>
  * <li>FieldData (.fdt) --&gt; &lt;Header&gt;, PackedIntsVersion, &lt;Chunk&gt;<sup>ChunkCount</sup></li>
  * <li>Header --&gt; {@link CodecUtil#writeIndexHeader IndexHeader}</li>
  * <li>PackedIntsVersion --&gt; {@link PackedInts#VERSION_CURRENT} as a {@link DataOutput#writeVInt VInt}</li>
- * <li>ChunkCount is not known in advance and is the number of chunks necessary to store all document of the segment</li>
- * <li>Chunk --&gt; DocBase, ChunkDocs, DocFieldCounts, DocLengths, &lt;CompressedDocs&gt;</li>
+ * <li>ChunkCount is not known in advance and is the number of chunks necessary to store all document of the segment
+ * 	   ChunkCount事先是不知道的，它表示必要的数据块的个数用来存储这个段中所有文档
+ * </li>
+ * <li>Chunk --&gt; DocBase, ChunkDocs(数据块中文档个数), DocFieldCounts(在数据块块里面，每个文档包含的储存域的个数), 
+ * DocLengths(数据块中所有文档的长度，编码的方法和DocFieldCounts一样), &lt;CompressedDocs&gt;
+ * </li>
  * <li>DocBase --&gt; the ID of the first document of the chunk as a {@link DataOutput#writeVInt VInt}</li>
  * <li>ChunkDocs --&gt; the number of documents in the chunk as a {@link DataOutput#writeVInt VInt}</li>
  * <li>DocFieldCounts --&gt; the number of stored fields of every document in the chunk, encoded as followed:<ul>

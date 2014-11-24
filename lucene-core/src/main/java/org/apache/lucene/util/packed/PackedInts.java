@@ -35,33 +35,41 @@ import org.apache.lucene.util.RamUsageEstimator;
  * Each value is >= 0 and <= a specified maximum value.  The
  * values are stored as packed ints, with each value
  * consuming a fixed number of bits.
+ * 简单的为没有符号长整型值数据的压缩器。 各个个值都在大于0，或者指定的最大值之间.
+ * 这些值被作为包装的Int存储,并且各个值消耗不同数量的bits
  *
  * @lucene.internal
  */
+
 public class PackedInts {
 
   /**
    * At most 700% memory overhead, always select a direct implementation.
+   * 最多700%的内存开销,总是选择一个直接的实现。
    */
   public static final float FASTEST = 7f;
 
   /**
    * At most 50% memory overhead, always select a reasonably fast implementation.
+   * 最多50%的内存消耗，最是选择一个相对快速的实现。
    */
   public static final float FAST = 0.5f;
 
   /**
    * At most 25% memory overhead.
+   * 最多25%的消耗
    */
   public static final float DEFAULT = 0.25f;
 
   /**
    * No memory overhead at all, but the returned implementation may be slow.
+   * 没有内存消耗，但是返回的实现可能很慢。
    */
   public static final float COMPACT = 0f;
 
   /**
    * Default amount of memory to use for bulk operations.
+   * 默认为大量的操作使用的内存总和
    */
   public static final int DEFAULT_BUFFER_SIZE = 1024; // 1K
 
@@ -84,7 +92,7 @@ public class PackedInts {
 
   /**
    * A format to write packed ints.
-   *
+   *写packed ints的格式
    * @lucene.internal
    */
   public enum Format {

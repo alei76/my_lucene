@@ -33,6 +33,7 @@ import org.apache.lucene.store.IOContext;
 /**
  * A {@link StoredFieldsFormat} that compresses documents in chunks in
  * order to improve the compression ratio.
+ * A {@link StoredFieldsFormat} 压缩文档到块里为了提高压缩率。
  * <p>
  * For a chunk size of <tt>chunkSize</tt> bytes, this {@link StoredFieldsFormat}
  * does not support documents larger than (<tt>2<sup>31</sup> - chunkSize</tt>)

@@ -39,8 +39,11 @@ public class TestLucene50SegmentInfoFormat {
 		String path = "E:/yipeng/my_lucene/index_dir/index_structure/";
 		Directory dir = FSDirectory.open(Paths.get(path));
 	    String[] files = dir.listAll();
-	    String lastSegmentsFile = SegmentInfos.getLastCommitSegmentsFileName(files);
+	    String lastSegmentsFile = SegmentInfos.getLastCommitSegmentsFileName(files);   //获取最后segment,文件名如:segments_N
 	    SegmentInfos sis = SegmentInfos.readCommit(dir, lastSegmentsFile);
 	    System.out.println(sis);
+	    System.out.println(sis.getGeneration());        //  generation of the "segments_N" for the next commit
+	    System.out.println(sis.version);                 /** Counts how often the index has been changed.  */
+	    System.out.println(sis.counter); 				/** Used to name new segments. */
 	}
 }

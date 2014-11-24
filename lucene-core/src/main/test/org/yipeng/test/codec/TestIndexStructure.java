@@ -1,18 +1,15 @@
 package org.yipeng.test.codec;
 
 import java.io.IOException;
-import java.nio.file.Path;
 import java.nio.file.Paths;
 
-import org.apache.lucene.analysis.Analyzer;
-import org.apache.lucene.analysis.Analyzer.TokenStreamComponents;
-import org.apache.lucene.codecs.CodecUtil;
+import org.apache.lucene.codecs.lucene50.Lucene50FieldInfosFormat;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
 import org.apache.lucene.document.FieldType;
+import org.apache.lucene.index.FieldInfo.IndexOptions;
 import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.index.IndexWriterConfig;
-import org.apache.lucene.index.FieldInfo.IndexOptions;
 import org.apache.lucene.index.IndexWriterConfig.OpenMode;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.FSDirectory;
@@ -59,7 +56,7 @@ public class TestIndexStructure {
 		config.setUseCompoundFile(false).setCommitOnClose(true);
 		config.setOpenMode(OpenMode.CREATE);
 		IndexWriter writer = new IndexWriter(dir, config);
-		Document doc = new Document();
+		
 		FieldType type = new FieldType();
 		type.setIndexOptions(IndexOptions.DOCS_AND_FREQS);
 		type.setStored(true);
@@ -68,14 +65,37 @@ public class TestIndexStructure {
 		type.setStoreTermVectorPayloads(true);
 		type.setStoreTermVectorOffsets(true);
 		type.setStoreTermVectorPositions(true);
-		Field f1 = new Field("city", "wuhan", type);
-		doc.add(f1);
-		doc.add(new Field("country", "china", type));
-		writer.addDocument(doc);
+		
+		Document doc1 = createDocument("wuhan", "china", type);
+		Document doc2 = createDocument("LA", "USA", type);
+		Document doc3 = createDocument("New York", "USA", type);
+		writer.addDocument(doc1);
+		writer.addDocument(doc2);
+		writer.addDocument(doc3);
+		writer.commit();                     //通过多次commit,产生多个Segment段.
+		
+		
+		Document doc4 = createDocument("ShangHai", "China", type);
+		Document doc5 = createDocument("London", "UK", type);
+		writer.addDocument(doc4);
+		writer.addDocument(doc5);
+		writer.commit();
+		
+		Document doc6 = createDocument("Sydney", "Australia", type);
+		Document doc7 = createDocument("Paris", "France", type);
+		writer.addDocument(doc6);
+		writer.addDocument(doc7);
+		writer.commit();
+		
 		writer.close();
-		
-		
-		
-		
+	}
+	
+	private static Document createDocument(String city,String country,FieldType type){
+		Document doc =  new Document();
+		Field f1 = new Field("city", city, type);
+		Field f2 = new Field("country", country, type);
+		doc.add(f1);
+		doc.add(f2);
+		return doc;
 	}
 }

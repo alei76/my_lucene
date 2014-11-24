@@ -108,10 +108,13 @@ public final class CompressingStoredFieldsIndexReader implements Cloneable, Acco
     this.startPointersDeltas = Arrays.copyOf(startPointersDeltas, blockCount);
   }
 
+  /*
+   * 这个方法通过二分查找的方法,获取这个文档ID,对应在docBases里的下标值。
+   */
   private int block(int docID) {
     int lo = 0, hi = docBases.length - 1;
     while (lo <= hi) {
-      final int mid = (lo + hi) >>> 1;
+      final int mid = (lo + hi) >>> 1;      //无符号右移一位
       final int midValue = docBases[mid];
       if (midValue == docID) {
         return mid;
