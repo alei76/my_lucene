@@ -98,6 +98,7 @@ public class PackedInts {
   public enum Format {
     /**
      * Compact format, all bits are written contiguously.
+     * 紧凑的格式，所有的bit位都连续的写。
      */
     PACKED(0) {
 
@@ -170,6 +171,7 @@ public class PackedInts {
     /**
      * Computes how many byte blocks are needed to store <code>values</code>
      * values of size <code>bitsPerValue</code>.
+     * 计算需要多少byte块去存储values 
      */
     public long byteCount(int packedIntsVersion, int valueCount, int bitsPerValue) {
       assert bitsPerValue >= 0 && bitsPerValue <= 64 : bitsPerValue;
@@ -554,11 +556,13 @@ public class PackedInts {
      *         Note: This does not imply that memory usage is
      *         {@code bitsPerValue * #values} as implementations are free to
      *         use non-space-optimal packing of bits.
+     *         返回任何你给定值所占位的个数
      */
     public abstract int getBitsPerValue();
 
     /**
      * Set the value at the given index in the array.
+     * 设置数组中给定index里的值.
      * @param index where the value should be positioned.
      * @param value a value conforming to the constraints set by the array.
      */
@@ -644,12 +648,12 @@ public class PackedInts {
 
   static abstract class MutableImpl extends Mutable {
 
-    protected final int valueCount;
-    protected final int bitsPerValue;
+    protected final int valueCount;			//值的数量
+    protected final int bitsPerValue;		//每个值占有多少位
 
     protected MutableImpl(int valueCount, int bitsPerValue) {
       this.valueCount = valueCount;
-      assert bitsPerValue > 0 && bitsPerValue <= 64 : "bitsPerValue=" + bitsPerValue;
+      assert bitsPerValue > 0 && bitsPerValue <= 64 : "bitsPerValue=" + bitsPerValue;  //所有的数字类型所占位数在(0,64]之间.
       this.bitsPerValue = bitsPerValue;
     }
 
@@ -958,7 +962,8 @@ public class PackedInts {
     return getDirectReaderNoHeader(in, format, version, valueCount, bitsPerValue);
   }
   
-  /**
+  /**通过给定值的个数创建一个压缩的整型数组，并且初始值为0,值的个数和每个值对应位的 个数创建后不能个更改。
+   * PackedInts的所有的Mutables都被保存在内存中
    * Create a packed integer array with the given amount of values initialized
    * to 0. the valueCount and the bitsPerValue cannot be changed after creation.
    * All Mutables known by this factory are kept fully in RAM.
@@ -1135,6 +1140,7 @@ public class PackedInts {
   }
 
   /**
+   * 根据给定的bit数字段其能表示的最大值</br>
    * Calculates the maximum unsigned long that can be expressed with the given
    * number of bits.
    * @param bitsPerValue the number of bits available for any given value.

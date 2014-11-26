@@ -71,7 +71,7 @@ public final class BlockPackedWriter extends AbstractBlockPackedWriter {
     assert off > 0;
     long min = Long.MAX_VALUE, max = Long.MIN_VALUE;
     for (int i = 0; i < off; ++i) {
-      min = Math.min(values[i], min);
+      min = Math.min(values[i], min);  
       max = Math.max(values[i], max);
     }
 
@@ -82,6 +82,7 @@ public final class BlockPackedWriter extends AbstractBlockPackedWriter {
       min = 0L;
     } else if (min > 0L) {
       // make min as small as possible so that writeVLong requires fewer bytes
+      // 使min尽可能小so that writeVLong需要更少的bytes
       min = Math.max(0L, max - PackedInts.maxValue(bitsRequired));
     }
 

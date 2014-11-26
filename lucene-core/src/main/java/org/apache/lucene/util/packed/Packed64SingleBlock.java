@@ -33,6 +33,9 @@ import org.apache.lucene.util.RamUsageEstimator;
 abstract class Packed64SingleBlock extends PackedInts.MutableImpl {
 
   public static final int MAX_SUPPORTED_BITS_PER_VALUE = 32;
+  /*
+   * 64位单个块所支持的每个值所在的位数.
+   */
   private static final int[] SUPPORTED_BITS_PER_VALUE = new int[] {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 12, 16, 21, 32};
 
   public static boolean isSupported(int bitsPerValue) {

@@ -50,8 +50,9 @@ public final class BitsFilteredDocIdSet extends FilteredDocIdSet {
    */
   public BitsFilteredDocIdSet(DocIdSet innerSet, Bits acceptDocs) {
     super(innerSet);
-    if (acceptDocs == null)
-      throw new NullPointerException("acceptDocs is null");
+    if (acceptDocs == null){
+    	throw new NullPointerException("acceptDocs is null");
+    }
     this.acceptDocs = acceptDocs;
   }
 
