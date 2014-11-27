@@ -31,10 +31,10 @@ public class TestLucene50StoredFieldsFormat {
 	    SegmentInfos sis = SegmentInfos.readCommit(dir, lastSegmentsFile);
 	    
 	    Lucene50FieldInfosFormat fieldInfosFormat = new Lucene50FieldInfosFormat();
-	    SegmentCommitInfo sci = sis.asList().get(1);
+	    SegmentCommitInfo sci = sis.asList().get(0);
 	    FieldInfos fn = fieldInfosFormat.read(sci.info.dir, sci.info, "", IOContext.READONCE);   //获取段中field的元数据。
 	    final DocumentStoredFieldVisitor visitor = new DocumentStoredFieldVisitor();
 		StoredFieldsReader sfr =  storedFieldsFormat.fieldsReader(dir,sci.info,fn,IOContext.DEFAULT);
-		sfr.visitDocument(1, visitor);
+		sfr.visitDocument(300000, visitor);
 	}
 }

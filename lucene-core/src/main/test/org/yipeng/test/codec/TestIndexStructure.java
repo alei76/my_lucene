@@ -66,26 +66,28 @@ public class TestIndexStructure {
 		type.setStoreTermVectorOffsets(true);
 		type.setStoreTermVectorPositions(true);
 		
-		Document doc1 = createDocument("wuhan", "china", type);
-		Document doc2 = createDocument("LA", "USA", type);
-		Document doc3 = createDocument("New York", "USA", type);
-		writer.addDocument(doc1);
-		writer.addDocument(doc2);
-		writer.addDocument(doc3);
+		for(int i=0;i<128*1024;i++){
+			Document doc1 = createDocument("wuhan", "china", type);
+			Document doc2 = createDocument("LA", "USA", type);
+			Document doc3 = createDocument("New York", "USA", type);
+			writer.addDocument(doc1);
+			writer.addDocument(doc2);
+			writer.addDocument(doc3);
+		}
 		writer.commit();                     //通过多次commit,产生多个Segment段.
 		
 		
-		Document doc4 = createDocument("ShangHai", "China", type);
-		Document doc5 = createDocument("London", "UK", type);
-		writer.addDocument(doc4);
-		writer.addDocument(doc5);
-		writer.commit();
-		
-		Document doc6 = createDocument("Sydney", "Australia", type);
-		Document doc7 = createDocument("Paris", "France", type);
-		writer.addDocument(doc6);
-		writer.addDocument(doc7);
-		writer.commit();
+//		Document doc4 = createDocument("ShangHai", "China", type);
+//		Document doc5 = createDocument("London", "UK", type);
+//		writer.addDocument(doc4);
+//		writer.addDocument(doc5);
+//		writer.commit();
+//		
+//		Document doc6 = createDocument("Sydney", "Australia", type);
+//		Document doc7 = createDocument("Paris", "France", type);
+//		writer.addDocument(doc6);
+//		writer.addDocument(doc7);
+//		writer.commit();
 		
 		writer.close();
 	}
