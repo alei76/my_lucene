@@ -100,6 +100,12 @@ public final class CompressingStoredFieldsIndexWriter implements Closeable {
 
   private void writeBlock() throws IOException {
     assert blockChunks > 0;
+    /*
+     * fdx文件重点关注的是<Block>,一个Block由三个部分组成：
+     * 1,BlockChunks表示当前Block中Chunk的个数；
+     * 2,<DocBases>表示当前Block中每个Chunk的doc个数，可以看作一个数组;
+     * 3,<StartPointers>表示当前Block中每个Chunk在fdt文件中的起始位置，其结构与<DocBases>相同。
+     */
     fieldsIndexOut.writeVInt(blockChunks);
 
     // The trick here is that we only store the difference from the average start
@@ -108,7 +114,16 @@ public final class CompressingStoredFieldsIndexWriter implements Closeable {
     // raise the number of bits per value for all of them, we only encode blocks
     // of 1024 chunks at once
     // See LUCENE-4512
-
+    
+    /*
+     * 
+     * 这段文字讲了一个技巧：“存储真实值和平均值的差值来代替存储真实值”；
+     * 比如有下面几个数据需要存储到文件中：[10000,9888,10002,99997,10003]；
+     * 各个数与平均值之间的差值如下：[0,-2,2,-3,3] ，用差值存储就可以节约很多bits了。
+     * 但是这样做又带来一个新的问题：负数的符号位都在最高位，而且PackedInts无法存储负数。
+     * 因此需要对数据进行转码，转码方式就是zigzag转码。Zigzag编码的方法非常简单：
+     */
+    
     // doc bases
     final int avgChunkDocs;
     if (blockChunks == 1) {

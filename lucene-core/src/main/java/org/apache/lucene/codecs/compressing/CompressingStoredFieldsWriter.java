@@ -179,7 +179,7 @@ public final class CompressingStoredFieldsWriter extends StoredFieldsWriter {
         }
       }
       if (allEqual) {
-        out.writeVInt(0);
+        out.writeVInt(0);                 //如果所有文档中域的个数都相同，先写一位0,再写域的个数.
         out.writeVInt(values[0]);
       } else {
         long max = 0;
@@ -223,8 +223,20 @@ public final class CompressingStoredFieldsWriter extends StoredFieldsWriter {
       lengths[i] = endOffsets[i] - endOffsets[i - 1];
       assert lengths[i] >= 0;
     }
+    
+    /*
+     * 一个Chunk由5个部分组成：
+     * 1,DocBase表示当前的Chunk块的起始DocId;
+     * 2,numBufferedDocs表示当前Chunk中的doc个数;
+     * 3,numStoredFields是一个数组,表示每个doc中Field的个数;
+     * 4,lengths也是一个数组，表示每个doc占用byte的个数，即doc的长度；
+     */
     writeHeader(docBase, numBufferedDocs, numStoredFields, lengths);
-
+    
+    /*
+     *5,<CompressedDocs>即doc的内容，用LZ4算法压缩存储。FieldNumAndType是把FieldNumber和FieldType合并到一个VLong字段里面，
+     * 整个<CompressedDocs>就是FieldNumAndType和Value的交替序列。
+     */
     // compress stored fields to fieldsStream
     if (bufferedDocs.length >= 2 * chunkSize) {
       // big chunk, slice it

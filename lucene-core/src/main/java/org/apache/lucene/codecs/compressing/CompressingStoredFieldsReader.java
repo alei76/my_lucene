@@ -241,6 +241,12 @@ public final class CompressingStoredFieldsReader extends StoredFieldsReader {
   public void visitDocument(int docID, StoredFieldVisitor visitor)
       throws IOException {
     fieldsStream.seek(indexReader.getStartPointer(docID));
+    /*
+     * 读取fdt文件中的Chunk信息，通过<DocLengths>和给定的docID确定整个Chunk存储的所有doc的总长度totalLength
+     * 和从baseDoc到docID的doc长度length。
+     * 并用LZ4解压Chunk中的doc内容。
+     * 当然，并不需要整个chunk的doc都解压，只需要解压到length的长度就可以了。
+     */
 
     final int docBase = fieldsStream.readVInt();
     final int chunkDocs = fieldsStream.readVInt();
@@ -259,9 +265,9 @@ public final class CompressingStoredFieldsReader extends StoredFieldsReader {
       length = fieldsStream.readVInt();
       totalLength = length;
     } else {
-      final int bitsPerStoredFields = fieldsStream.readVInt();
-      if (bitsPerStoredFields == 0) {
-        numStoredFields = fieldsStream.readVInt();
+      final int bitsPerStoredFields = fieldsStream.readVInt();        //读取此chunk每个存储域所占的bit位数。
+      if (bitsPerStoredFields == 0) {                                 //为0表示所有文档中域的个数一样，
+        numStoredFields = fieldsStream.readVInt();					 //表示文档中域的个数。
       } else if (bitsPerStoredFields > 31) {
         throw new CorruptIndexException("bitsPerStoredFields=" + bitsPerStoredFields, fieldsStream);
       } else {
