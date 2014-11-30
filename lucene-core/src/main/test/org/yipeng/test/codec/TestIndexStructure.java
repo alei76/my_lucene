@@ -3,7 +3,9 @@ package org.yipeng.test.codec;
 import java.io.IOException;
 import java.nio.file.Paths;
 
+import org.apache.lucene.codecs.blocktree.BlockTreeTermsWriter;
 import org.apache.lucene.codecs.lucene50.Lucene50FieldInfosFormat;
+import org.apache.lucene.codecs.lucene50.Lucene50PostingsFormat;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
 import org.apache.lucene.document.FieldType;
@@ -29,7 +31,7 @@ import org.yipeng.test.analysis.WhitespaceAnalyzer;
  *Fields					.fnm							域文件，存储field信息		{@link Lucene50FieldInfosFormat}
  *Fields Index				.fdx							域指针文件，包含域数据数据的指针
  *Fields Data				.fdt							域数据文件，包含文档中存储的域数据
- *Term Dictionary			.tim							项词典，存储项信息
+ *Term Dictionary			.tim							项词典，存储项信息                         {@link Lucene50PostingsFormat} , {@link BlockTreeTermsWriter}
  *Term Index				.tip							项索引，存储到项词典的索引
  *Frequencies				.doc							频率,包含每个项以及频率信息
  *Positions					.pos							位置，存储一个项在索引中的位置信息
