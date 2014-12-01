@@ -47,23 +47,34 @@ import org.apache.lucene.util.packed.PackedInts;
  * Basic idea:
  * <ul>
  *   <li>
- *   <b>Packed Blocks and VInt Blocks</b>: 
+ *   <b>Packed Blocks and VInt Blocks压缩的块和变长的块</b>: 
  *   <p>In packed blocks, integers are encoded with the same bit width ({@link PackedInts packed format}):
  *      the block size (i.e. number of integers inside block) is fixed (currently 128). Additionally blocks
  *      that are all the same value are encoded in an optimized way.</p>
+ *   <p>在压缩的块中,整型的数被编码成相同的位({@link PackedInts packed format}),这个块的size(比如在块中的整型数)是定长的(目前是128)。此外，所有块
+ *   	大小是被编码相同的值以一种优化的方法。
+ *   </p>
  *   <p>In VInt blocks, integers are encoded as {@link DataOutput#writeVInt VInt}:
- *      the block size is variable.</p>
+ *      the block size is variable.
+ *   	在变长整型的块中，整型是被编码{@link DataOutput#writeVInt VInt},块的大小事变化的。
+ *   </p>
  *   </li>
  *
  *   <li> 
- *   <b>Block structure</b>: 
+ *   <b>Block structure <块的结构> </b>: 
  *   <p>When the postings are long enough, Lucene50PostingsFormat will try to encode most integer data 
- *      as a packed block.</p> 
+ *      as a packed block.
+ *      当位置足够长的时候,Lucene50PostingsFormat会试着编码所有的整数到一个压缩的块中。
+ *   </p> 
  *   <p>Take a term with 259 documents as an example, the first 256 document ids are encoded as two packed 
- *      blocks, while the remaining 3 are encoded as one VInt block. </p>
+ *      blocks, while the remaining 3 are encoded as one VInt block. 
+ *   	拿一个term词,对应259个documents,最先的头256个文档ids被编码到两个packed blocks，当剩下的3个被编码到一个VInt block
+ *   </p>
  *   <p>Different kinds of data are always encoded separately into different packed blocks, but may 
- *      possibly be interleaved into the same VInt block. </p>
- *   <p>This strategy is applied to pairs: 
+ *      possibly be interleaved into the same VInt block. 
+ *   	不同类型的data总是被编码到两个不同的packed blocks,但是可能被插入到同一个VInt。
+ *   </p>
+ *   <p>This strategy is applied to pairs:这种策略适用于成对。
  *      &lt;document number, frequency&gt;,
  *      &lt;position, payload length&gt;, 
  *      &lt;position, offset start, offset length&gt;, and
@@ -71,7 +82,7 @@ import org.apache.lucene.util.packed.PackedInts;
  *   </li>
  *
  *   <li>
- *   <b>Skipdata settings</b>: 
+ *   <b>Skipdata settings 跳跃数据设置</b>: 
  *   <p>The structure of skip table is quite similar to previous version of Lucene. Skip interval is the 
  *      same as block size, and each skip entry points to the beginning of each block. However, for 
  *      the first block, skip data is omitted.</p>
