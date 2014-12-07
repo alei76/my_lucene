@@ -487,7 +487,7 @@ public final class FST<T> implements Accountable {
     }
   }
   
-  // Caches first 128 labels
+  // Caches first 128 labels当))finsh()方法时给cachedRootArcs赋值。
   @SuppressWarnings({"rawtypes","unchecked"})
   private void cacheRootArcs() throws IOException {
     cachedRootArcs = (Arc<T>[]) new Arc[0x80];
@@ -876,7 +876,7 @@ public final class FST<T> implements Accountable {
   }
 
   /** Fills virtual 'start' arc, ie, an empty incoming arc to
-   *  the FST's start node */
+   *  the FST's start node.fills虚拟的'start'弧。比如，一个空的输入弧对FST的开始节点。 */
   public Arc<T> getFirstArc(Arc<T> arc) {
 
     if (emptyOutput != null) {
@@ -1000,7 +1000,9 @@ public final class FST<T> implements Accountable {
       return readFirstRealTargetArc(follow.target, arc, in);
     }
   }
-
+  /*
+   * 读取第一个真实的目标弧
+   */
   public Arc<T> readFirstRealTargetArc(long node, Arc<T> arc, final BytesReader in) throws IOException {
     final long address = getNodeAddress(node);
     in.setPosition(address);
@@ -1141,7 +1143,7 @@ public final class FST<T> implements Accountable {
         arc.target = NON_FINAL_END_NODE;
       }
       arc.nextArc = in.getPosition();
-    } else if (arc.flag(BIT_TARGET_NEXT)) {
+    } else if (arc.flag(BIT_TARGET_NEXT)) {//如果flag包含BIT_TARGET_NEXT则,数组左边的位置刚好就是nextArc。
       arc.nextArc = in.getPosition();
       // TODO: would be nice to make this lazy -- maybe
       // caller doesn't need the target and is scanning arcs...
@@ -1160,7 +1162,7 @@ public final class FST<T> implements Accountable {
         arc.target = arc.node - 1;
         assert arc.target > 0;
       }
-    } else {
+    } else {//否则读一个变长的target
       if (packed) {
         final long pos = in.getPosition();
         final long code = in.readVLong();

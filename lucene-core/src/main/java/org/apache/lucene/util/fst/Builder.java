@@ -197,7 +197,7 @@ public class Builder<T> {
     }
     assert node != -2;
 
-    nodeIn.clear();
+    nodeIn.clear();                //当节点UnCompiledNode变成CompiledNode时，都clear()掉。
 
     final CompiledNode fn = new CompiledNode();
     fn.node = node;
@@ -249,8 +249,8 @@ public class Builder<T> {
       if (node.inputCount < minSuffixCount2 || (minSuffixCount2 == 1 && node.inputCount == 1 && idx > 1)) {
         // drop all arcs
         for(int arcIdx=0;arcIdx<node.numArcs;arcIdx++) {
-          @SuppressWarnings({"rawtypes","unchecked"}) final UnCompiledNode<T> target =
-          (UnCompiledNode<T>) node.arcs[arcIdx].target;
+          @SuppressWarnings({"rawtypes","unchecked"}) 
+          final UnCompiledNode<T> target = (UnCompiledNode<T>) node.arcs[arcIdx].target;
           target.clear();
         }
         node.numArcs = 0;
@@ -390,7 +390,7 @@ public class Builder<T> {
     }
 
     final UnCompiledNode<T> lastNode = frontier[input.length];
-    //如果和上一次输入不是相同的输入
+    //判断是否为一个输入最后的节点。
     if (lastInput.length() != input.length || prefixLenPlus1 != input.length + 1) {
       lastNode.isFinal = true;
       lastNode.output = NO_OUTPUT;
@@ -583,7 +583,7 @@ public class Builder<T> {
         }
         arcs = newArcs;
       }
-      final Arc<T> arc = arcs[numArcs++];
+      final Arc<T> arc = arcs[numArcs++];       //如果之前的弧被freeze到complieNode。则会被新的覆盖。
       arc.label = label;
       arc.target = target;
       arc.output = arc.nextFinalOutput = owner.NO_OUTPUT;
