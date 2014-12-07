@@ -61,7 +61,7 @@ public final class ByteSequenceOutputs extends Outputs<BytesRef> {
     }
 
     if (pos1 == output1.offset) {
-      // no common prefix
+      // no common prefix没有公共的前缀
       return NO_OUTPUT;
     } else if (pos1 == output1.offset + output1.length) {
       // output1 is a prefix of output2

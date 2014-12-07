@@ -99,12 +99,13 @@ public class Builder<T> {
    *    The input type (transition labels). Can be anything from {@link INPUT_TYPE}
    *    enumeration. Shorter types will consume less memory. Strings (character sequences) are 
    *    represented as {@link INPUT_TYPE#BYTE4} (full unicode codepoints). 
-   *     
+   *    输入的type。能够使{@link INPUT_TYPE}枚举中的任意一个，越小的types消耗的内存就越少。Strings类型的是{@link INPUT_TYPE#BYTE4}(unicode编码)
+   *    
    * @param minSuffixCount1
    *    If pruning the input graph during construction, this threshold is used for telling
    *    if a node is kept or pruned. If transition_count(node) &gt;= minSuffixCount1, the node
    *    is kept. 
-   *    
+   *    在构造时，是否减少输入图,这个阀值用来判断一个节点是否保存还是删除,如果transition_count(node)大于minSuffixCount1，这个节点就保留
    * @param minSuffixCount2
    *    (Note: only Mike McCandless knows what this one is really doing...) 
    * 
@@ -113,11 +114,14 @@ public class Builder<T> {
    *    This requires an additional RAM-intensive hash map for lookups in memory. Setting this parameter to
    *    <code>false</code> creates a single suffix path for all input sequences. This will result in a larger
    *    FST, but requires substantially less memory and CPU during building.  
+   *	如果为true,这些共享的前缀将被压缩到一个唯一的路径。这需要额外的密集的hashmap为在内存中查找。
+   *	如果为false，创造一个单独的前缀路径对所有的输入序列。这个会导致一个更大的FSt,但是在构建的时候，基本上需要更少的内存和cpu
    *
    * @param doShareNonSingletonNodes
    *    Only used if doShareSuffix is true.  Set this to
    *    true to ensure FST is fully minimal, at cost of more
    *    CPU and more RAM during building.
+   *    只在doShareSuffix是true时使用。设置这个为true确保FST是最小的,在构建的时候花费更多的cpu和内存。
    *
    * @param shareMaxTailLength
    *    Only used if doShareSuffix is true.  Set this to
@@ -160,8 +164,8 @@ public class Builder<T> {
     }
     NO_OUTPUT = outputs.getNoOutput();
 
-    @SuppressWarnings({"rawtypes","unchecked"}) final UnCompiledNode<T>[] f =
-        (UnCompiledNode<T>[]) new UnCompiledNode[10];
+    @SuppressWarnings({"rawtypes","unchecked"})
+    final UnCompiledNode<T>[] f = (UnCompiledNode<T>[]) new UnCompiledNode[10];
     frontier = f;
     for(int idx=0;idx<frontier.length;idx++) {
       frontier[idx] = new UnCompiledNode<>(this, idx);
@@ -330,7 +334,7 @@ public class Builder<T> {
     }
     */
 
-    // De-dup NO_OUTPUT since it must be a singleton:
+    // De-dup NO_OUTPUT since it must be a singleton:保证NO_OUTPUT必须是单例的.
     if (output.equals(NO_OUTPUT)) {
       output = NO_OUTPUT;
     }
@@ -351,7 +355,7 @@ public class Builder<T> {
       return;
     }
 
-    // compare shared prefix length
+    // 计算公共前缀的长度
     int pos1 = 0;
     int pos2 = input.offset;
     final int pos1Stop = Math.min(lastInput.length(), input.length);
@@ -367,8 +371,8 @@ public class Builder<T> {
     final int prefixLenPlus1 = pos1+1;
       
     if (frontier.length < input.length+1) {
-      @SuppressWarnings({"rawtypes","unchecked"}) final UnCompiledNode<T>[] next =
-        new UnCompiledNode[ArrayUtil.oversize(input.length+1, RamUsageEstimator.NUM_BYTES_OBJECT_REF)];
+      @SuppressWarnings({"rawtypes","unchecked"}) 
+      final UnCompiledNode<T>[] next = new UnCompiledNode[ArrayUtil.oversize(input.length+1, RamUsageEstimator.NUM_BYTES_OBJECT_REF)];
       System.arraycopy(frontier, 0, next, 0, frontier.length);
       for(int idx=frontier.length;idx<next.length;idx++) {
         next[idx] = new UnCompiledNode<>(this, idx);
@@ -376,25 +380,24 @@ public class Builder<T> {
       frontier = next;
     }
 
-    // minimize/compile states from previous input's
-    // orphan'd suffix
+    //从尾部一直到公共前缀的节点，将已经确定的状态节点冰封
     freezeTail(prefixLenPlus1);
 
-    // init tail states for current input
+    // 将当前输入字符串的后缀形成状态节点加入到FST树中,由frontier维护。
     for(int idx=prefixLenPlus1;idx<=input.length;idx++) {
-      frontier[idx-1].addArc(input.ints[input.offset + idx - 1],
-                             frontier[idx]);
+      frontier[idx-1].addArc(input.ints[input.offset + idx - 1],frontier[idx]);
       frontier[idx].inputCount++;
     }
 
     final UnCompiledNode<T> lastNode = frontier[input.length];
+    //如果和上一次输入不是相同的输入
     if (lastInput.length() != input.length || prefixLenPlus1 != input.length + 1) {
       lastNode.isFinal = true;
       lastNode.output = NO_OUTPUT;
     }
 
     // push conflicting outputs forward, only as far as
-    // needed
+    // needed。将输出的冲突向前推。
     for(int idx=1;idx<prefixLenPlus1;idx++) {
       final UnCompiledNode<T> node = frontier[idx];
       final UnCompiledNode<T> parentNode = frontier[idx-1];
@@ -406,11 +409,11 @@ public class Builder<T> {
       final T wordSuffix;
 
       if (lastOutput != NO_OUTPUT) {
-        commonOutputPrefix = fst.outputs.common(output, lastOutput);
+        commonOutputPrefix = fst.outputs.common(output, lastOutput);//计算这次输出和上次输出公共的前缀。
         assert validOutput(commonOutputPrefix);
         wordSuffix = fst.outputs.subtract(lastOutput, commonOutputPrefix);
         assert validOutput(wordSuffix);
-        parentNode.setLastOutput(input.ints[input.offset + idx - 1], commonOutputPrefix);
+        parentNode.setLastOutput(input.ints[input.offset + idx - 1], commonOutputPrefix);//前一个节点的输出修改为公共前缀的输出。
         node.prependOutput(wordSuffix);
       } else {
         commonOutputPrefix = wordSuffix = NO_OUTPUT;
@@ -422,11 +425,12 @@ public class Builder<T> {
 
     if (lastInput.length() == input.length && prefixLenPlus1 == 1+input.length) {
       // same input more than 1 time in a row, mapping to
-      // multiple outputs
+      // multiple outputs不止一次相同的输入,对应到不同的输出。
       lastNode.output = fst.outputs.merge(lastNode.output, output);
     } else {
       // this new arc is private to this new input; set its
       // arc output to the leftover output:
+      //这个新的弧对新的输入是私有的，设置这个弧的输出所剩余输出。
       frontier[prefixLenPlus1-1].setLastOutput(input.ints[input.offset + prefixLenPlus1-1], output);
     }
 
@@ -569,9 +573,10 @@ public class Builder<T> {
     public void addArc(int label, Node target) {
       assert label >= 0;
       assert numArcs == 0 || label > arcs[numArcs-1].label: "arc[-1].label=" + arcs[numArcs-1].label + " new label=" + label + " numArcs=" + numArcs;
+      //如果节点的出度等于现在弧数组的长度，就需要扩容了。
       if (numArcs == arcs.length) {
-        @SuppressWarnings({"rawtypes","unchecked"}) final Arc<T>[] newArcs =
-          new Arc[ArrayUtil.oversize(numArcs+1, RamUsageEstimator.NUM_BYTES_OBJECT_REF)];
+        @SuppressWarnings({"rawtypes","unchecked"}) 
+        final Arc<T>[] newArcs = new Arc[ArrayUtil.oversize(numArcs+1, RamUsageEstimator.NUM_BYTES_OBJECT_REF)];
         System.arraycopy(arcs, 0, newArcs, 0, arcs.length);
         for(int arcIdx=numArcs;arcIdx<newArcs.length;arcIdx++) {
           newArcs[arcIdx] = new Arc<>();
