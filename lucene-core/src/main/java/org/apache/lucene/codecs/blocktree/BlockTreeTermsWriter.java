@@ -858,11 +858,14 @@ public final class BlockTreeTermsWriter extends FieldsConsumer {
       }
     }
 
-    /** Pushes the new term to the top of the stack, and writes new blocks. */
+    /** Pushes the new term to the top of the stack, and writes new blocks. 
+     * 
+     * */
     private void pushTerm(BytesRef text) throws IOException {
       int limit = Math.min(lastTerm.length(), text.length);
 
       // Find common prefix between last term and current term:
+      //找到目前的term和先前的term
       int pos = 0;
       while (pos < limit && lastTerm.byteAt(pos) == text.bytes[text.offset+pos]) {
         pos++;
@@ -887,7 +890,7 @@ public final class BlockTreeTermsWriter extends FieldsConsumer {
         prefixStarts = ArrayUtil.grow(prefixStarts, text.length);
       }
 
-      // Init new tail:
+      // Init new tail初始化新的尾部:
       for(int i=pos;i<text.length;i++) {
         prefixStarts[i] = pending.size();
       }

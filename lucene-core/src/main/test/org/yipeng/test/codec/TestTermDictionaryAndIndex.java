@@ -3,6 +3,7 @@ package org.yipeng.test.codec;
 import java.io.IOException;
 import java.nio.file.Paths;
 
+import org.apache.lucene.codecs.FieldsConsumer;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
 import org.apache.lucene.document.FieldType;
@@ -16,6 +17,13 @@ import org.junit.Test;
 import org.yipeng.test.analysis.WhitespaceAnalyzer;
 
 public class TestTermDictionaryAndIndex {
+	/*
+	 * {@link FreqProxTermsWriter#flush}中
+	 * FieldsConsumer consumer = state.segmentInfo.getCodec().postingsFormat().fieldsConsumer(state);
+	 * 获取PerFieldPostingsFormat
+	 * 
+	 */
+	
 	@Test
 	public void createIndexOnDisk() throws IOException{
 		String path = "E:/yipeng/my_lucene/index_dir/tim_tip_structure";
@@ -42,5 +50,5 @@ public class TestTermDictionaryAndIndex {
 		
 		writer.close();
 	}
-
+	
 }
