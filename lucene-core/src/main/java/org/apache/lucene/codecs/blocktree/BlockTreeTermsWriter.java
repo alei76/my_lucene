@@ -504,6 +504,14 @@ public final class BlockTreeTermsWriter extends FieldsConsumer {
     // startsByPrefix[0] is the index into pending for the first
     // term/sub-block starting with 't'.  We use this to figure out when
     // to write a new block:
+    /*
+     * prefixStarts [0, 0, 1, 3, 0, 0, 0, 0]
+     * 表示当前term,前缀开始在pending栈中的开始index.
+     * 比如第四个term。0~3都相同的前缀的第一个开始的term在pending中index为3
+     * 			   0~2都相同的前缀在的第一个开始的term在pending中index为1
+     * 			   0~1在pending的index为0
+     * 			   0~0都相同的前缀在pending的index为0
+    */
     private final BytesRefBuilder lastTerm = new BytesRefBuilder();
     private int[] prefixStarts = new int[8];
 
@@ -521,7 +529,9 @@ public final class BlockTreeTermsWriter extends FieldsConsumer {
     private PendingTerm firstPendingTerm;
     private PendingTerm lastPendingTerm;
 
-    /** Writes the top count entries in pending, using prevTerm to compute the prefix. */
+    /** Writes the top count entries in pending, using prevTerm to compute the prefix. 
+     * 写在peding中最多数量的entries,使用前面term去计算前缀。
+     * */
     void writeBlocks(int prefixLength, int count) throws IOException {
 
       assert count > 0;
@@ -630,7 +640,10 @@ public final class BlockTreeTermsWriter extends FieldsConsumer {
      *  from pending stack as a new block.  If isFloor is true, there
      *  were too many (more than maxItemsInBlock) entries sharing the
      *  same prefix, and so we broke it into multiple floor blocks where
-     *  we record the starting label of the suffix of each floor block. */
+     *  we record the starting label of the suffix of each floor block. 
+     *  写特定的片(start是包括的，end是不包括的。)作为一个新的block从pending的栈。如果isFloor是true,那是很多(大于maxItemsInBlock)
+     *  的entries共享相同的前缀,所以我们把他们划分成多个层级的block,我们记录每层块后缀的起始标签。
+     *  */
     private PendingBlock writeBlock(int prefixLength, boolean isFloor, int floorLeadLabel, int start, int end, boolean hasTerms, boolean hasSubBlocks) throws IOException {
 
       assert end > start;
@@ -859,7 +872,7 @@ public final class BlockTreeTermsWriter extends FieldsConsumer {
     }
 
     /** Pushes the new term to the top of the stack, and writes new blocks. 
-     * 
+     * push 新的term到栈的顶部,并且写新的块。
      * */
     private void pushTerm(BytesRef text) throws IOException {
       int limit = Math.min(lastTerm.length(), text.length);
