@@ -527,6 +527,8 @@ public final class BlockTreeTermsWriter extends FieldsConsumer {
     // we append to this stack, and once the top of the stack has enough
     // terms starting with a common prefix, we write a new block with
     // those terms and replace those terms in the stack with a new block:
+    //未定的关于terms和blocks的栈,当terms到达(在已经排序),我们加到这个栈里，一旦
+    //栈的top有足够的相同前缀的terms,我们给这些terms写一个新的block,并且replace这些terms以新的block
     private final List<PendingEntry> pending = new ArrayList<>();
 
     // Reused in writeBlocks:
@@ -559,6 +561,8 @@ public final class BlockTreeTermsWriter extends FieldsConsumer {
       // True if we saw at least one term in this block (we record if a block
       // only points to sub-blocks in the terms index so we can avoid seeking
       // to it when we are looking for a term):
+      //true如果我们看到不止一个term在这个block(我们记录是否一个block只指向子blocks在terms的index，所以我们能
+      //避免当寻找一个term时，seek到它)
       boolean hasTerms = false;
       boolean hasSubBlocks = false;
 
@@ -571,7 +575,7 @@ public final class BlockTreeTermsWriter extends FieldsConsumer {
 
         PendingEntry ent = pending.get(i);
 
-        int suffixLeadLabel;//后缀后第一个label
+        int suffixLeadLabel;//后缀中的第一个label
 
         if (ent.isTerm) {
           PendingTerm term = (PendingTerm) ent;
@@ -595,6 +599,7 @@ public final class BlockTreeTermsWriter extends FieldsConsumer {
           int itemsInBlock = i - nextBlockStart;//itemsInBlock表示block中items的个数
           if (itemsInBlock >= minItemsInBlock && end-nextBlockStart > maxItemsInBlock) {
         	//如果数量对于一个block太大,我们必须把它拆成层级的blcok,
+        	//并且我们记录每层block第一个term后缀中第一的label,这样当搜索时，我们能调到正确的block上，
             // The count is too large for one block, so we must break it into "floor" blocks, where we record
             // the leading label of the suffix of the first term in each floor block, so at search time we can
             // jump to the right floor block.  We just use a naive greedy segmenter here: make a new floor
@@ -635,8 +640,10 @@ public final class BlockTreeTermsWriter extends FieldsConsumer {
       firstBlock.compileIndex(newBlocks, scratchBytes, scratchIntsRef);
 
       // Remove slice from the top of the pending stack, that we just wrote:
+      //从pending的栈中移除刚才我们写的。
       pending.subList(pending.size()-count, pending.size()).clear();
-
+      
+      //将新的block加到pending中
       // Append new block
       pending.add(firstBlock);
 
@@ -925,6 +932,7 @@ public final class BlockTreeTermsWriter extends FieldsConsumer {
     }
 
     // Finishes all terms in this field
+    //finishes在这个域下的所有的terms
     public void finish() throws IOException {
       if (numTerms > 0) {
         // if (DEBUG) System.out.println("BTTW: finish prefixStarts=" + Arrays.toString(prefixStarts));
@@ -957,7 +965,7 @@ public final class BlockTreeTermsWriter extends FieldsConsumer {
           w.close();
         }
         */
-        assert firstPendingTerm != null;
+        assert firstPendingTerm != null; 
         BytesRef minTerm = new BytesRef(firstPendingTerm.termBytes);
 
         assert lastPendingTerm != null;
