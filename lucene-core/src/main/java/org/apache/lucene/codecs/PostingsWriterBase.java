@@ -61,7 +61,13 @@ public abstract class PostingsWriterBase implements Closeable {
    *  method must set the bit in the provided {@link
    *  FixedBitSet} for every docID written.  If no docs
    *  were written, this method should return null, and the
-   *  terms dict will skip the term. */
+   *  terms dict will skip the term.
+   *  写所有的链表给一个term;使用提供的{@link TermsEnum}去得出一个{@link DocsEnum} 或者 {@link
+   *  DocsAndPositionsEnum}.这个方法不应该重新排位给{@code TermsEnum}.它已经是term应该写的位置。这个方法必须设置已经提供的{@link
+   *  FixedBitSet}对每个要写的docID.如果没有docs要被写,这个方法应该返回null。并且terms dict应该跳过这个term
+   *   
+   *   
+   *   */
   public abstract BlockTermState writeTerm(BytesRef term, TermsEnum termsEnum, FixedBitSet docsSeen) throws IOException;
 
   /**
