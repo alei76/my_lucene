@@ -261,7 +261,7 @@ public final class Lucene50FieldInfosFormat extends FieldInfosFormat {
 
         byte bits = 0x0;
         if (fi.hasVectors()) bits |= STORE_TERMVECTOR;
-        if (fi.omitsNorms()) bits |= OMIT_NORMS;
+        if (fi.omitsNorms()) bits |= OMIT_NORMS;           //是否忽略因子。
         if (fi.hasPayloads()) bits |= STORE_PAYLOADS;
         output.writeByte(bits);
 
