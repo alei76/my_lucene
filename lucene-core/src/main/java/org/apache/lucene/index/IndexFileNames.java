@@ -31,6 +31,8 @@ import org.apache.lucene.codecs.Codec;
  * generation and extension (
  * {@link #fileNameFromGeneration(String, String, long) fileNameFromGeneration},
  * {@link #segmentFileName(String, String, String) segmentFileName}).
+ *这个类包含有用的常量，代表Lucene使用的文件名和扩展名,已经方便的查询方法给查询一个文件是否匹配后缀通过
+ *{@link #matchesExtension(String, String) matchesExtension},也增长的文件名和段名。
  *
  * <p><b>NOTE</b>: extensions used by codecs are not
  * listed here.  You must interact with the {@link Codec}

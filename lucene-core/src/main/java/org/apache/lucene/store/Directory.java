@@ -79,7 +79,9 @@ public abstract class Directory implements Closeable {
    * Ensure that any writes to these files are moved to
    * stable storage.  Lucene uses this to properly commit
    * changes to the index, to prevent a machine/OS crash
-   * from corrupting the index.<br/>
+   * from corrupting the index.
+   * 确保任何写入这些文件被移到稳定的存储。Lucene使用这正确提交变化到索引，为防止机器/操作系统崩溃破坏索引
+   * <br/>
    * <br/>
    * NOTE: Clients may call this method for same files over
    * and over again, so some impls might optimize for that.

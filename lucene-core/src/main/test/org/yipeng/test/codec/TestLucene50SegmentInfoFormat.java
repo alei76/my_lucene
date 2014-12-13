@@ -19,7 +19,7 @@ import org.junit.Test;
 public class TestLucene50SegmentInfoFormat {
 	
 	
-	
+	@Test
 	public void testLucene50SegmentInfoWrite() throws IOException{
 		String path = "E:/yipeng/my_lucene/index_dir/index_structure/segmentInfoFormat";
 		Directory dir = FSDirectory.open(Paths.get(path));
@@ -34,7 +34,7 @@ public class TestLucene50SegmentInfoFormat {
 	
 	
 	
-	@Test
+	
 	public void testLucene50SegmentInfoRead() throws IOException{
 		String path = "E:/yipeng/my_lucene/index_dir/index_structure/";
 		Directory dir = FSDirectory.open(Paths.get(path));
