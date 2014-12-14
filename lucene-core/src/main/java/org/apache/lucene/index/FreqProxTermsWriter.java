@@ -100,7 +100,7 @@ final class FreqProxTermsWriter extends TermsHash {
     Fields fields = new FreqProxFields(allFields);
 
     applyDeletes(state, fields); 
-
+    
     FieldsConsumer consumer = state.segmentInfo.getCodec().postingsFormat().fieldsConsumer(state);
     boolean success = false;
     try {
