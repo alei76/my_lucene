@@ -64,7 +64,9 @@ public final class IntBlockPool {
 
   /** index into the buffers array pointing to the current buffer used as the head */
   private int bufferUpto = -1;   
-  /** Pointer to the current position in head buffer */
+  /** Pointer to the current position in head buffer 
+   * 指出在buffer中当前的位置。
+   * */
   public int intUpto = INT_BLOCK_SIZE;
   /** Current head buffer */
   public int[] buffer;
