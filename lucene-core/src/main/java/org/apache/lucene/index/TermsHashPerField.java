@@ -151,6 +151,7 @@ abstract class TermsHashPerField implements Comparable<TermsHashPerField> {
     // We are first in the chain so we must "intern" the
     // term text into textStart address
     // Get the text & hash of this term.
+    //我们在链中的第一个,所以我们必须把term文本放到textStart的地址中
     int termID = bytesHash.add(termBytesRef);
       
     //System.out.println("add term=" + termBytesRef.utf8ToString() + " doc=" + docState.docID + " termID=" + termID);

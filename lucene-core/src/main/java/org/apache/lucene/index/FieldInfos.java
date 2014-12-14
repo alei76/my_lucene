@@ -283,7 +283,10 @@ public class FieldInfos implements Iterable<FieldInfo> {
    
     /** NOTE: this method does not carry over termVector
      *  the indexer chain must set these fields when they
-     *  succeed in consuming the document */
+     *  succeed in consuming the document 
+     *  
+     *  这个方法没有覆盖termVector,这些索引链必须设置这些域当他们成功消费这个文档(document)
+     *  */
     public FieldInfo addOrUpdate(String name, IndexableFieldType fieldType) {
       // TODO: really, indexer shouldn't even call this
       // method (it's only called from DocFieldProcessor);
@@ -305,6 +308,8 @@ public class FieldInfos implements Iterable<FieldInfo> {
         // number for this field.  If the field was seen
         // before then we'll get the same name and number,
         // else we'll allocate a new one:
+    	//这个域还没有被加到这个内存中断的FieldInfo里,所以现在我们得到一个全局的globalFieldNumbers给这个域.如果这个域已经被
+    	//看见过，然后我们将得到一个相同名字和number，否则我们将分配一个新的。
         final int fieldNumber = globalFieldNumbers.addOrGet(name, preferredFieldNumber, docValues);
         fi = new FieldInfo(name, fieldNumber, storeTermVector, omitNorms, storePayloads, indexOptions, docValues, -1, null);
         assert !byName.containsKey(fi.name);

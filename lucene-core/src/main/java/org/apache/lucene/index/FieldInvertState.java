@@ -28,6 +28,8 @@ import org.apache.lucene.util.AttributeSource;
  * being added to the index. The information collected in this class is
  * also used to calculate the normalization factor for a field.
  * 
+ * 这个类追踪number和位置和位移等参数关于terms开始被加到索引里,这个类搜集的信息也会被用到计算对于一个域的归一化因子上。
+ * 
  * @lucene.experimental
  */
 public final class FieldInvertState {
