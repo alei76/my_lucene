@@ -209,7 +209,9 @@ class DocumentsWriterPerThread {
   }
 
   /** Anything that will add N docs to the index should reserve first to
-   *  make sure it's allowed. */
+   *  make sure it's allowed. 
+   *  任何将要加N个docs到索引应该首先确保被允许。
+   *  */
   private void reserveDoc() {
     if (pendingNumDocs.incrementAndGet() > IndexWriter.getActualMaxDocs()) {
       // Reserve failed

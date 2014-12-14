@@ -469,7 +469,10 @@ final class DefaultIndexingChain extends DocConsumer {
   /** Returns a previously created {@link PerField},
    *  absorbing the type information from {@link FieldType},
    *  and creates a new {@link PerField} if this field name
-   *  wasn't seen yet. */
+   *  wasn't seen yet. 
+   *  
+   *  返回先前创建的{@link PerField},并且创建一个新的{@link PerField}如果这个域的名字还没有设置。
+   *  */
   private PerField getOrAddField(String name, IndexableFieldType fieldType, boolean invert) {
 
     // Make sure we have a PerField allocated
@@ -481,7 +484,7 @@ final class DefaultIndexingChain extends DocConsumer {
 
     if (fp == null) {
       // First time we are seeing this field in this segment
-
+      //在这个段中，这个域是我们第一次看见。
       FieldInfo fi = fieldInfos.addOrUpdate(name, fieldType);
       
       fp = new PerField(fi, invert);
@@ -570,7 +573,10 @@ final class DefaultIndexingChain extends DocConsumer {
 
     /** Inverts one field for one document; first is true
      *  if this is the first time we are seeing this field
-     *  name in this document. */
+     *  name in this document.
+     *  
+     *  倒排一个域对一个document;first为true,当这是第一次我们看见这个域的名字出现在这个文档里。
+     **/
     public void invert(IndexableField field, boolean first) throws IOException {
       if (first) {
         // First time we're seeing this field (indexed) in
