@@ -24,7 +24,7 @@ import java.util.Map;
 import org.apache.lucene.util.ByteBlockPool;
 import org.apache.lucene.util.Counter;
 import org.apache.lucene.util.IntBlockPool;
-
+ 
 /** This class is passed each token produced by the analyzer
  *  on each field during indexing, and it stores these
  *  tokens in a hash table, and allocates separate byte
