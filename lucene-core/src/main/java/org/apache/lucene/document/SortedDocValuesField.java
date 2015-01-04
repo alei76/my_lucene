@@ -23,8 +23,10 @@ import org.apache.lucene.util.BytesRef;
 /**
  * <p>
  * Field that stores
- * a per-document {@link BytesRef} value, indexed for
- * sorting.  Here's an example usage:
+ * a per-document {@link BytesRef} value, indexed for sorting.  
+ * 每一个文档存储域的值，索引给排序。
+ * 
+ * Here's an example usage:
  * 
  * <pre class="prettyprint">
  *   document.add(new SortedDocValuesField(name, new BytesRef("hello")));
