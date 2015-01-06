@@ -194,7 +194,7 @@ public final class FieldInfo {
     }
 
     if (this.indexOptions != null) { // if updated field data is not for indexing, leave the updates out
-      this.storeTermVector |= storeTermVector;                // once vector, always vector
+      this.storeTermVector |= storeTermVector;                // once vector, always vector一次vector,总是vector
       this.storePayloads |= storePayloads;
 
       // Awkward: only drop norms if incoming update is indexed:

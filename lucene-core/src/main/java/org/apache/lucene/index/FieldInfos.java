@@ -308,7 +308,7 @@ public class FieldInfos implements Iterable<FieldInfo> {
         // number for this field.  If the field was seen
         // before then we'll get the same name and number,
         // else we'll allocate a new one:
-    	//这个域还没有被加到这个内存中断的FieldInfo里,所以现在我们得到一个全局的globalFieldNumbers给这个域.如果这个域已经被
+    	//这个域还没有被加到这个内存中段的FieldInfo里,所以现在我们得到一个全局的globalFieldNumbers给这个域.如果这个域已经被
     	//看见过，然后我们将得到一个相同名字和number，否则我们将分配一个新的。
         final int fieldNumber = globalFieldNumbers.addOrGet(name, preferredFieldNumber, docValues);
         fi = new FieldInfo(name, fieldNumber, storeTermVector, omitNorms, storePayloads, indexOptions, docValues, -1, null);
