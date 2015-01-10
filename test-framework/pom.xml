@@ -44,6 +44,12 @@
 			<artifactId>junit</artifactId>
 			<version>4.10</version>
 		</dependency>
+		
+		<dependency>
+			<groupId>org.yieng.learn</groupId>
+			<artifactId>lucene-core</artifactId>
+			<version>0.1-YP-SNAPSHOT</version>
+		</dependency>
 	</dependencies>
 
 	<build>
