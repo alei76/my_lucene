@@ -3,6 +3,7 @@ package com.yipeng.model;
 public class Product {
 	private long productId;
 	private String productName;
+	private String code;
 	private long brandId;
 	private String brandName;
 	private long categoryId;
@@ -25,6 +26,7 @@ public class Product {
 		p.setCategoryId(Long.parseLong(arrays[4]));
 		p.setCategoryName(arrays[5]);
 		p.setScore(Double.parseDouble(arrays[6]));
+		p.setCode(arrays[7]);
 		return p;
 	}
 	
@@ -74,5 +76,15 @@ public class Product {
 
 	public void setBrandId(long brandId) {
 		this.brandId = brandId;
+	}
+
+
+	public String getCode() {
+		return code;
+	}
+
+
+	public void setCode(String code) {
+		this.code = code;
 	}
 }

@@ -5,6 +5,7 @@ import java.nio.file.Paths;
 import java.util.List;
 
 import org.apache.lucene.document.Document;
+import org.apache.lucene.document.DoubleDocValuesField;
 import org.apache.lucene.document.DoubleField;
 import org.apache.lucene.document.Field.Store;
 import org.apache.lucene.document.LongField;
@@ -42,6 +43,8 @@ public class ProductIndexBuilder {
 			doc.add(new LongField("category_id",prod.getCategoryId(),Store.YES));
 			doc.add(new StringField("category_name", prod.getCategoryName(), Store.YES));
 			doc.add(new DoubleField("score", prod.getScore(), Store.YES));
+			doc.add(new DoubleDocValuesField("score", prod.getScore()));
+			doc.add(new StringField("code", prod.getCode(), Store.YES));
 			writer.addDocument(doc);
 		}
 		writer.commit();
