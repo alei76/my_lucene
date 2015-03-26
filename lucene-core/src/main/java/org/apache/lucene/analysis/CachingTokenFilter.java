@@ -29,6 +29,8 @@ import org.apache.lucene.util.AttributeSource;
  * are intended to be consumed more than once. It caches
  * all token attribute states locally in a List.
  * 
+ * 这个类可以用来如果这个token的属性为了被消费多与一次，它缓存所有的token attribute的状态本地在一个List里
+ * 
  * <P>CachingTokenFilter implements the optional method
  * {@link TokenStream#reset()}, which repositions the
  * stream to the first Token. 

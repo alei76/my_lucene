@@ -17,7 +17,7 @@ import org.junit.Test;
 public class TestIndexSearch {
 	@Test
 	public void testIndexSearch() throws IOException{
-		String path = "E:/yipeng/my_lucene/index_dir/my_index" ;
+		String path = "D:/yipeng/my_lucene/index_dir/my_index" ;
 		Directory dir = FSDirectory.open(Paths.get(path));
 		IndexReader indexReader = DirectoryReader.open(dir);
 		IndexSearcher searcher = new IndexSearcher(indexReader);

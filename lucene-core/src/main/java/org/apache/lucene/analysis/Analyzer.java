@@ -28,12 +28,16 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * An Analyzer builds TokenStreams, which analyze text.  It thus represents a
- * policy for extracting index terms from text.
+ * An Analyzer builds TokenStreams, which analyze text.  It thus represents a policy for extracting index terms from text.
+ * 
+ * 一个analyzer构造TokenStreams,作为解析文本，因此他代表一种策略从文本提取索引的terms
  * <p>
  * In order to define what analysis is done, subclasses must define their
  * {@link TokenStreamComponents TokenStreamComponents} in {@link #createComponents(String)}.
  * The components are then reused in each call to {@link #tokenStream(String, Reader)}.
+ * 为了定义怎样解析，子类必须定义他们的TokenStreamComponents ,  在方法createComponents中,这个组件是为了对每个调用tokenStream方法的时候重用。
+ * 
+ * 
  * <p>
  * Simple example:
  * <pre class="prettyprint">
@@ -75,6 +79,7 @@ public abstract class Analyzer implements Closeable {
   private Version version = Version.LATEST;
 
   // non final as it gets nulled if closed; pkg private for access by ReuseStrategy's final helper methods:
+  //每个线程使用各自保存的值
   CloseableThreadLocal<Object> storedValue = new CloseableThreadLocal<>();
 
   /**
@@ -274,8 +279,8 @@ public abstract class Analyzer implements Closeable {
      */
     protected final Tokenizer source;
     /**
-     * Sink tokenstream, such as the outer tokenfilter decorating
-     * the chain. This can be the source if there are no filters.
+     * Sink tokenstream, such as the outer tokenfilter decorating the chain. This can be the source if there are no filters.
+     * Sink tokenstream, 例如the outer tokenfilter 装饰这个链。这个也可以是source,如果没有filters。
      */
     protected final TokenStream sink;
     
@@ -342,6 +347,7 @@ public abstract class Analyzer implements Closeable {
   /**
    * Strategy defining how TokenStreamComponents are reused per call to
    * {@link Analyzer#tokenStream(String, java.io.Reader)}.
+   * 策略定义了TokenStreamComponents 怎样被重复利用对每次调用tokenStream的时候
    */
   public static abstract class ReuseStrategy {
 
@@ -350,7 +356,7 @@ public abstract class Analyzer implements Closeable {
 
     /**
      * Gets the reusable TokenStreamComponents for the field with the given name.
-     *
+     *通过给定域的名字得到可以重新利用的TokenStreamComponents
      * @param analyzer Analyzer from which to get the reused components. Use
      *        {@link #getStoredValue(Analyzer)} and {@link #setStoredValue(Analyzer, Object)}
      *        to access the data on the Analyzer.
@@ -362,8 +368,8 @@ public abstract class Analyzer implements Closeable {
     public abstract TokenStreamComponents getReusableComponents(Analyzer analyzer, String fieldName);
 
     /**
-     * Stores the given TokenStreamComponents as the reusable components for the
-     * field with the give name.
+     * Stores the given TokenStreamComponents as the reusable components for the field with the give name.
+     * 保存给定的TokenStreamComponents，作为给定名字的域的可利用组件
      *
      * @param fieldName Name of the field whose TokenStreamComponents are being set
      * @param components TokenStreamComponents which are to be reused for the field
@@ -372,7 +378,7 @@ public abstract class Analyzer implements Closeable {
 
     /**
      * Returns the currently stored value.
-     *
+     * 返回当前保存的值
      * @return Currently stored value or {@code null} if no value is stored
      * @throws AlreadyClosedException if the Analyzer is closed.
      */

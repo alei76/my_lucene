@@ -20,7 +20,7 @@ import org.yipeng.test.analysis.WhitespaceAnalyzer;
 public class TestIndexCreate {
 	@Test
 	public void createIndexOnDisk() throws IOException{
-		String path = "E:/yipeng/my_lucene/index_dir/my_index";
+		String path = "D:/yipeng/my_lucene/index_dir/my_index";
 		Directory dir = FSDirectory.open(Paths.get(path));
 		IndexWriterConfig config = new IndexWriterConfig(new WhitespaceAnalyzer());
 		config.setUseCompoundFile(false).setCommitOnClose(true);
